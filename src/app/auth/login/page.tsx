@@ -46,7 +46,7 @@ export default function LoginPage() {
             })
             router.push("/dashboard");
         }
-        if (result?.status === 401) {
+        else if (result?.status === 401) {
             toast.error("User not found. Please register first.",
                 {
                     className: "toast-error",
@@ -54,11 +54,13 @@ export default function LoginPage() {
             );
             return;
         }
-        toast.error("Something went wrong. Please try again.",
-            {
-                className: "toast-error",
-            }
-        );
+        else {
+            toast.error("Something went wrong. Please try again.",
+                {
+                    className: "toast-error",
+                }
+            );
+        }
 
     }
 

@@ -4,6 +4,9 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
+import { useState } from "react";
+import { Eye, EyeClosed } from "lucide-react";
 
 const SiginUpSchema = z.object({
     name: z.string().min(2, "name must be at least two characters"),
@@ -12,7 +15,7 @@ const SiginUpSchema = z.object({
 })
 
 export default function SignUpPage() {
-
+    const [showPassword, setShowPassword] = useState(false);
     const form = useForm<z.infer<typeof SiginUpSchema>>({
         resolver: zodResolver(SiginUpSchema),
         defaultValues: {
@@ -63,13 +66,21 @@ export default function SignUpPage() {
                     />
 
                 </div>
-                <div className="border rounded-md border-gray-400">
+                <div className="border rounded-md border-gray-400 relative">
                     <input
                         className="p-1"
-                        type="password"
+                        type={showPassword ? "text" : "password"}
                         placeholder="Password"
                         {...form.register("password")}
+
                     />
+                    <button
+                        type="button"
+                        onClick={() => setShowPassword(!showPassword)}
+                        className="absolute right-1 top-1.5 text-zinc-400 "
+                    >
+                        {showPassword ? <EyeClosed size={20} /> : <Eye size={20} />}
+                    </button>
                     {form.formState.errors.password && (
                         <p className="text-red-500 text-xs mt-1">
                             {form.formState.errors.password.message}
@@ -81,12 +92,17 @@ export default function SignUpPage() {
             </div>
 
             <button type="submit" className="
-            block mx-auto
-             mt-2 text-white bg-[#1447E6] box-border border border-transparent
-              hover:bg-[#155DFB] font-medium leading-5 text-sm px-4 py-1 
-              rounded-full duration-300 ">
-                Login
+                block mx-auto mt-2 text-white bg-[#1447E6] box-border border border-transparent
+                hover:bg-[#155DFB] font-medium leading-5 text-sm px-4 py-1 
+                rounded-full duration-300 ">
+                SignUp
             </button>
+
+            <Link
+                href="/auth/login"
+                className=" mt-2 text-black block text-center">
+                Already Register Login
+            </Link>
         </form>
     );
 }

@@ -4,6 +4,11 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { signIn } from "next-auth/react";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
+import { useRouter } from "next/navigation";
+import Link from "next/link";
+import { toast } from "sonner";
+import { useState } from "react";
+import { Eye, EyeClosed } from "lucide-react";
 
 const loginSchema = z.object({
     email: z.string().email("Invalid email"),
@@ -12,7 +17,7 @@ const loginSchema = z.object({
 
 export default function LoginPage() {
 
-
+    const [showPassword, setShowPassword] = useState(false);
     const form = useForm<z.infer<typeof loginSchema>>({
         resolver: zodResolver(loginSchema),
         defaultValues: {
@@ -20,6 +25,7 @@ export default function LoginPage() {
             password: "",
         },
     })
+    const router = useRouter();
     async function onSubmit(data: z.infer<typeof loginSchema>) {
         const result = await signIn("credentials", {
             email: data.email,
@@ -27,7 +33,25 @@ export default function LoginPage() {
             redirect: false,
 
         });
-        console.log(result)
+        if (result?.ok) {
+            toast.success("Login sucessful", {
+                className: "toast-success",
+            })
+            router.push("/dashboard");
+        }
+        if (result?.status === 401) {
+            toast.error("User not found. Please register first.",
+                {
+                    className: "toast-error",
+                }
+            );
+            return;
+        }
+        toast.error("Something went wrong. Please try again.",
+            {
+                className: "toast-error",
+            }
+        );
 
     }
     return (
@@ -37,20 +61,34 @@ export default function LoginPage() {
             <div className=" flex flex-col gap-3">
                 <div className="border rounded-md border-gray-400">
                     <input
-                        className="p-1"
+                        className="p-1 outline-none w-full"
                         type="email"
                         placeholder="Email"
                         {...form.register("email")}
                     />
 
+
                 </div>
-                <div className="border rounded-md border-gray-400">
+                {form.formState.errors.email && (
+                    <p className="text-red-500 text-xs mt-1">
+                        {form.formState.errors.email.message}
+                    </p>
+                )}
+                <div className="border rounded-md border-gray-400 relative" >
                     <input
-                        className="p-1"
-                        type="password"
+                        className="p-1 outline-none w-full"
+                        type={showPassword ? "text" : "password"}
                         placeholder="Password"
                         {...form.register("password")}
+
                     />
+                    <button
+                        type="button"
+                        onClick={() => setShowPassword(!showPassword)}
+                        className="absolute right-1 top-1.5 text-zinc-400 "
+                    >
+                        {showPassword ? <EyeClosed size={20} /> : <Eye size={20} />}
+                    </button>
                 </div>
 
                 {form.formState.errors.password && (
@@ -60,13 +98,20 @@ export default function LoginPage() {
                 )}
             </div>
 
-            <button type="submit" className="
-            block mx-auto
-             mt-2 text-white bg-[#1447E6] box-border border border-transparent
-              hover:bg-[#155DFB] font-medium leading-5 text-sm px-4 py-1 
-              rounded-full duration-300 ">
+
+            <button type="submit"
+                className=" block mx-auto mt-2 text-white bg-[#1447E6] box-border border border-transparent
+                hover:bg-[#155DFB] font-medium leading-5 text-sm px-4 py-1 
+                rounded-full duration-300 ">
                 Login
             </button>
+
+            <Link
+                href="/auth/signup"
+                className="block text-center mt-2 text-black ">
+                New Member SignUp
+            </Link>
+
         </form>
     );
 }

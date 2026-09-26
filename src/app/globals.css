@@ -1,1 +1,11 @@
 @import "tailwindcss";
+
+.toast-success {
+  background: green !important;
+  color: white !important;
+}
+
+.toast-error {
+  background: red !important;
+  color: white !important;
+}

@@ -1,6 +1,6 @@
 import mongoose, { Schema, Document } from "mongoose";
 
-export interface ITranaction extends Document {
+export interface ITransaction extends Document {
     user: mongoose.Types.ObjectId;
     title: string;
     amount: number;
@@ -12,41 +12,56 @@ export interface ITranaction extends Document {
     updatedAt: Date;
 }
 
-const transactionSchema: Schema<ITranaction> = new Schema({
-    user: {
-        type: mongoose.Types.ObjectId,
-        ref: "User",
-        required: true
+const transactionSchema: Schema<ITransaction> = new Schema(
+    {
+        user: {
+            type: mongoose.Types.ObjectId,
+            ref: "User",
+            required: true,
+        },
+
+        title: {
+            type: String,
+            required: true,
+            trim: true,
+        },
+
+        amount: {
+            type: Number,
+            required: true,
+            min: 0,
+        },
+
+        type: {
+            type: String,
+            enum: ["income", "expense"],
+            required: true,
+        },
+
+        category: {
+            type: String,
+            required: true,
+            trim: true,
+        },
+
+        date: {
+            type: Date,
+            required: true,
+        },
+
+        description: {
+            type: String,
+            trim: true,
+        },
     },
-    title: {
-        type: String,
-        required: true,
-        trim: true
-    },
-    amount: {
-        type: Number,
-        required: true
-    },
-    type: {
-        type: String,
-        enum: ["income", "expense"],
-        required: true
-    },
-    category: {
-        type: String,
-        required: true,
-        trim: true
-    },
-    date: {
-        type: Date,
-        required: true
-    },
-    description: {
-        type: String,
-        trim: true
-    },
-}, {
-    timestamps: true
-})
-export const Transaction = mongoose.models.Transaction || mongoose.model<ITranaction>("Transaction", transactionSchema);
+    {
+        timestamps: true,
+    }
+);
+
+export const Transaction =
+    mongoose.models.Transaction ||
+    mongoose.model<ITransaction>("Transaction", transactionSchema);
+
 export default Transaction;
+

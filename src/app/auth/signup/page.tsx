@@ -8,6 +8,7 @@ import Link from "next/link";
 import { useState } from "react";
 import { Eye, EyeClosed } from "lucide-react";
 import { Newsreader } from "next/font/google";
+import { toast } from "sonner";
 
 const newsreader = Newsreader({
     subsets: ["latin"],
@@ -43,6 +44,15 @@ export default function SignUpPage() {
         const result = await response.json();
         if (response.ok && result.success) {
             router.push("/auth/login");
+            toast.success("Account created successfully. Please log in.", {
+                className: "toast-success",
+            });
+        }
+
+        if (result.error) {
+            toast.error(result.error, {
+                className: "toast-error",
+            });
         }
 
         console.log(result);

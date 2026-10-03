@@ -5,7 +5,7 @@ export interface ITransaction extends Document {
     title: string;
     amount: number;
     type: "income" | "expense";
-    category: string;
+    category?: string;
     date: Date;
     description?: string;
     createdAt: Date;
@@ -40,7 +40,6 @@ const transactionSchema: Schema<ITransaction> = new Schema(
 
         category: {
             type: String,
-            required: true,
             trim: true,
         },
 

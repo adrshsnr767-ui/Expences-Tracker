@@ -1,5 +1,7 @@
 "use client";
 
+import AddExpenseForm from "@/components/expenses/AddExpenseForm";
+// NEW: import the modal — adjust path to wherever you saved it
 import BalanceHero from "@/components/main-content/Balance-Hero";
 import RecentTransaction from "@/components/main-content/RecentTransaction";
 import CategoryBreakdown from "@/components/main-content/SpendingCategory";
@@ -14,9 +16,9 @@ import {
     Tag,
     X
 } from "lucide-react";
-import { signOut } from "next-auth/react";
 import { Newsreader } from "next/font/google";
 import { useState } from "react";
+
 
 const newsreader = Newsreader({
     subsets: ["latin"],
@@ -31,15 +33,9 @@ const navItems = [
     { label: "Settings", icon: Settings, active: false },
 ];
 
-
-
-
-
-
 export default function DashboardPage() {
     const [navOpen, setNavOpen] = useState(false);
-
-
+    const [addOpen, setAddOpen] = useState(false); // NEW: controls whether AddExpenseForm renders
 
     return (
         <div className="min-h-screen bg-[#FAF7F2] md:flex">
@@ -97,11 +93,12 @@ export default function DashboardPage() {
                             Here`&apos`s your month.
                         </h1>
                     </div>
-                    <button onClick={() => signOut()}
-
+                    {/* CHANGED: this was calling signOut() — that's your logout handler, not the modal opener.
+                        That's the actual bug: clicking "Add Transactions" was signing you out, not opening the form. */}
+                    <button onClick={() => setAddOpen(true)}
                         className="hidden sm:flex items-center gap-2 bg-[#B8863B] text-[#101B2D] text-sm font-medium px-4 py-2.5 hover:bg-[#C7975A] transition-colors">
                         <Plus size={16} />
-                        Add expense
+                        Add Transactions
                     </button>
                 </div>
 
@@ -117,10 +114,12 @@ export default function DashboardPage() {
                     <CategoryBreakdown />
 
                     {/* Recent transactions */}
-                 <RecentTransaction/>
+                    <RecentTransaction />
                 </div>
             </main>
+
+            {/* NEW: modal lives at the page root, only actually renders content when addOpen is true */}
+            <AddExpenseForm isOpen={addOpen} onClose={() => setAddOpen(false)} />
         </div>
     );
 }
-

@@ -9,7 +9,7 @@ type CreateTransactionBody = {
     title: string;
     amount: number;
     type: "income" | "expense";
-    category: string;
+    category?: string;
     date: Date;
     description?: string;
 };

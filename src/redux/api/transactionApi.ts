@@ -1,4 +1,5 @@
 import { apiSlice } from "./apiSlice";
+import type { TransactionsResponse } from "@/types/transaction";
 
 export const transactionApi = apiSlice.injectEndpoints({
     endpoints: (builder) => ({
@@ -8,10 +9,17 @@ export const transactionApi = apiSlice.injectEndpoints({
                 method: "POST",
                 body: data,
             }),
+            invalidatesTags: ["Transactions"],
+        }),
+
+        getTransactions: builder.query<TransactionsResponse, void>({
+            query: () => "/transactions",
+            providesTags: ["Transactions"],
         }),
     }),
 });
 
 export const {
     useCreateTransactionMutation,
+    useGetTransactionsQuery,
 } = transactionApi;

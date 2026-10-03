@@ -51,3 +51,32 @@ export async function POST(request: Request) {
         );
     }
 }
+
+
+export async function GET() {
+    try {
+        await dbConnect();
+        const session = await getServerSession(authOptions);
+        if (!session?.user?.id) {
+            return NextResponse.json(
+                { message: "Unauthorized" },
+                { status: 401 }
+            );
+        }
+
+        const transactions = await Transaction.find({
+            user: session.user.id,
+        }).sort({ date: -1 });
+
+        return NextResponse.json({
+            data: transactions,
+        });
+    } catch (error) {
+        console.error(error);
+
+        return NextResponse.json(
+            { message: "Something went wrong" },
+            { status: 500 }
+        );
+    }
+}

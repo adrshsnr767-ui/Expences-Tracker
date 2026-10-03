@@ -1,7 +1,6 @@
 "use client";
 
 import AddExpenseForm from "@/components/expenses/AddExpenseForm";
-// NEW: import the modal — adjust path to wherever you saved it
 import BalanceHero from "@/components/main-content/Balance-Hero";
 import RecentTransaction from "@/components/main-content/RecentTransaction";
 import CategoryBreakdown from "@/components/main-content/SpendingCategory";
@@ -16,6 +15,7 @@ import {
     Tag,
     X
 } from "lucide-react";
+import { useSession } from "next-auth/react";
 import { Newsreader } from "next/font/google";
 import { useState } from "react";
 
@@ -36,6 +36,8 @@ const navItems = [
 export default function DashboardPage() {
     const [navOpen, setNavOpen] = useState(false);
     const [addOpen, setAddOpen] = useState(false); // NEW: controls whether AddExpenseForm renders
+    const { data: session } = useSession();
+    const firstName = session?.user?.name?.split(" ")[0];
 
     return (
         <div className="min-h-screen bg-[#FAF7F2] md:flex">
@@ -88,9 +90,11 @@ export default function DashboardPage() {
 
                 <div className="flex items-center justify-between mb-10">
                     <div>
-                        <p className="text-[#7A7266] text-sm">Good to see you, Aadarsha</p>
+                        <p className="text-[#7A7266] text-sm">
+                            Good to see you, {firstName || ""}
+                        </p>
                         <h1 className={`${newsreader.className} text-[#101B2D] text-2xl mt-0.5`}>
-                            Here`&apos`s your month.
+                            Here&apos;s your month.
                         </h1>
                     </div>
                     {/* CHANGED: this was calling signOut() — that's your logout handler, not the modal opener.

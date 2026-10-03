@@ -1,3 +1,4 @@
+import { useGetTransactionsQuery } from "@/redux/api/transactionApi";
 import { ArrowDownRight, ArrowUpRight } from "lucide-react";
 import { Newsreader } from "next/font/google";
 const newsreader = Newsreader({
@@ -6,22 +7,19 @@ const newsreader = Newsreader({
     style: ["normal", "italic"],
 });
 
-const transactions = [
-    { name: "Bhat Bhateni Supermarket", category: "Groceries", date: "Sep 28", amount: -1240, type: "expense" },
-    { name: "Salary — Deerwalk Pvt Ltd", category: "Income", date: "Sep 27", amount: 45000, type: "income" },
-    { name: "Pathao ride", category: "Transport", date: "Sep 26", amount: -320, type: "expense" },
-    { name: "NEA Electricity Bill", category: "Utilities", date: "Sep 24", amount: -1450, type: "expense" },
-    { name: "Cafe Soma", category: "Dining out", date: "Sep 23", amount: -680, type: "expense" },
-    { name: "House rent", category: "Rent", date: "Sep 21", amount: -8000, type: "expense" },
-];
-
 export default function BalanceHero() {
+
+    const { data, isLoading, error } = useGetTransactionsQuery();
+    const transactions = data?.data ?? [];
+
     const totalSpent = transactions
         .filter((t) => t.type === "expense")
-        .reduce((sum, t) => sum + Math.abs(t.amount), 0);
+        .reduce((sum, t) => sum + t.amount, 0);
+
     const totalIncome = transactions
         .filter((t) => t.type === "income")
         .reduce((sum, t) => sum + t.amount, 0);
+
     const balance = totalIncome - totalSpent;
 
     return (

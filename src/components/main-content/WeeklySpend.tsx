@@ -54,8 +54,7 @@ export default function WeeklySpend() {
                 const mondayIndex = dayIndex === 0 ? 6 : dayIndex - 1;
 
                 return mondayIndex === index;
-            })
-            .reduce((sum, transaction) => sum + transaction.amount, 0);
+            }).reduce((sum, transaction) => sum + transaction.amount, 0);
 
         return {
             day,

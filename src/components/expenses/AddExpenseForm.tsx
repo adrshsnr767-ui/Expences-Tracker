@@ -85,7 +85,7 @@ export default function AddExpenseForm({
             }
             console.log(result);
             form.reset();
-            onClose(); // NEW: close the modal automatically after a successful save
+            onClose(); 
         } catch (error) {
             console.error(error);
         }

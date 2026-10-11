@@ -1,3 +1,5 @@
+"use client";
+
 import { useGetTransactionsQuery } from "@/redux/api/transactionApi";
 import { ArrowDownRight, ArrowUpRight } from "lucide-react";
 import { Newsreader } from "next/font/google";
@@ -22,12 +24,26 @@ export default function BalanceHero() {
 
     const balance = totalIncome - totalSpent;
 
+    if (error) {
+        return (
+            <div className="border border-[#E4DFD3] p-6 md:p-8 mb-8">
+                <span className="text-[#7A7266] text-xs uppercase tracking-wide">Current balance</span>
+                <p className="text-[#B34747] text-sm mt-2">Failed to load balance</p>
+            </div>
+        );
+    }
+
     return (
         <div className="border border-[#E4DFD3] p-6 md:p-8 mb-8">
             <span className="text-[#7A7266] text-xs uppercase tracking-wide">Current balance</span>
-            <div className={`${newsreader.className} text-[#101B2D] text-4xl md:text-5xl mt-2`}>
-                Rs {balance.toLocaleString()}
-            </div>
+
+            {isLoading ? (
+                <div className="bh-skel h-10 md:h-12 w-48 mt-2" />
+            ) : (
+                <div className={`${newsreader.className} text-[#101B2D] text-4xl md:text-5xl mt-2`}>
+                    Rs {balance.toLocaleString()}
+                </div>
+            )}
 
             <div className="flex gap-8 mt-6 pt-6 border-t border-[#E4DFD3]">
                 <div className="flex items-center gap-2">
@@ -36,7 +52,11 @@ export default function BalanceHero() {
                     </div>
                     <div>
                         <p className="text-[#7A7266] text-xs">Income</p>
-                        <p className="text-[#101B2D] text-sm font-medium">Rs {totalIncome.toLocaleString()}</p>
+                        {isLoading ? (
+                            <div className="bh-skel h-4 w-16 mt-1" />
+                        ) : (
+                            <p className="text-[#101B2D] text-sm font-medium">Rs {totalIncome.toLocaleString()}</p>
+                        )}
                     </div>
                 </div>
                 <div className="flex items-center gap-2">
@@ -45,10 +65,26 @@ export default function BalanceHero() {
                     </div>
                     <div>
                         <p className="text-[#7A7266] text-xs">Spent</p>
-                        <p className="text-[#101B2D] text-sm font-medium">Rs {totalSpent.toLocaleString()}</p>
+                        {isLoading ? (
+                            <div className="bh-skel h-4 w-16 mt-1" />
+                        ) : (
+                            <p className="text-[#101B2D] text-sm font-medium">Rs {totalSpent.toLocaleString()}</p>
+                        )}
                     </div>
                 </div>
             </div>
+
+            <style>{`
+                .bh-skel {
+                    background-color: #E4DFD3;
+                    border-radius: 2px;
+                    animation: bh-pulse 1.4s ease-in-out infinite;
+                }
+                @keyframes bh-pulse {
+                    0%, 100% { opacity: 1; }
+                    50% { opacity: 0.4; }
+                }
+            `}</style>
         </div>
     )
 }

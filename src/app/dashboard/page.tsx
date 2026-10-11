@@ -1,6 +1,7 @@
 "use client";
 
 import AddExpenseForm from "@/components/expenses/AddExpenseForm";
+import BudgetForm from "@/components/forms/BudgetForm";
 import BalanceHero from "@/components/main-content/Balance-Hero";
 import RecentTransaction from "@/components/main-content/RecentTransaction";
 import CategoryBreakdown from "@/components/main-content/SpendingCategory";
@@ -35,7 +36,8 @@ const navItems = [
 
 export default function DashboardPage() {
     const [navOpen, setNavOpen] = useState(false);
-    const [addOpen, setAddOpen] = useState(false); // NEW: controls whether AddExpenseForm renders
+    const [addOpen, setAddOpen] = useState(false);
+    const [budgetOpen, setBudgetOpen] = useState(false);
     const { data: session } = useSession();
     const firstName = session?.user?.name?.split(" ")[0];
 
@@ -97,13 +99,18 @@ export default function DashboardPage() {
                             Here&apos;s your month.
                         </h1>
                     </div>
-                    {/* CHANGED: this was calling signOut() — that's your logout handler, not the modal opener.
-                        That's the actual bug: clicking "Add Transactions" was signing you out, not opening the form. */}
-                    <button onClick={() => setAddOpen(true)}
-                        className="hidden sm:flex items-center gap-2 bg-[#B8863B] text-[#101B2D] text-sm font-medium px-4 py-2.5 hover:bg-[#C7975A] transition-colors">
-                        <Plus size={16} />
-                        Add Transactions
-                    </button>
+                    <div className="flex gap-2">
+                        <button onClick={() => setAddOpen(true)}
+                            className="hidden sm:flex items-center gap-2 bg-[#B8863B] text-[white] text-sm font-medium px-4 py-2.5 hover:bg-[#C7975A] transition-colors">
+                            <Plus size={16} />
+                            Add Transactions
+                        </button>
+
+                        <button onClick={() => setBudgetOpen(true)}
+                            className="hidden sm:flex items-center gap-2 bg-[#B8863B] text-[white] text-sm font-medium px-4 py-2.5 hover:bg-[#C7975A] transition-colors">
+                            Set Budget
+                        </button>
+                    </div>
                 </div>
 
                 {/* Balance hero */}
@@ -122,8 +129,9 @@ export default function DashboardPage() {
                 </div>
             </main>
 
-            {/* NEW: modal lives at the page root, only actually renders content when addOpen is true */}
             <AddExpenseForm isOpen={addOpen} onClose={() => setAddOpen(false)} />
+
+            <BudgetForm isOpen={budgetOpen} onClose={() => setBudgetOpen(false)} />
         </div>
     );
 }

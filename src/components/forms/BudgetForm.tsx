@@ -45,15 +45,13 @@ export default function BudgetForm({ isOpen, onClose }: {
         resolver: zodResolver(budgetFormSchema),
         defaultValues: { categories: [] },
     });
-    // what does get valuess does
     const { getValues, reset } = form;
-    // what is this useFieldArray doing here
     const { fields } = useFieldArray({
         control: form.control,
         name: "categories",
     });
 
-    // what is this useEffect doing here
+    
     useEffect(() => {
         if (!data?.data) return;
         const current = getValues("categories");
@@ -65,7 +63,7 @@ export default function BudgetForm({ isOpen, onClose }: {
             })),
         });
     }, [data, getValues, reset]);
-    // what is the onSubmit function doing here
+
     async function onSubmit(values: BudgetFormValues) {
         try {
             await Promise.all(

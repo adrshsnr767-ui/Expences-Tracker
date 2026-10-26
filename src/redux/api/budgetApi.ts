@@ -22,7 +22,7 @@ export const budgetApi = apiSlice.injectEndpoints({
     endpoints: (builder) => ({
         saveBudget: builder.mutation<SaveBudgetResponse, SaveBudgetRequest>({
             query: (body) => ({
-                url: "/budgets",
+                url: "/budget",
                 method: "POST",
                 body,
             }),

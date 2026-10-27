@@ -10,8 +10,7 @@ const CATEGORY_COLORS: Record<string, string> = {
     "Dining out": "#B34747",
     Utilities: "#7A7266",
 };
-
-const normalize = (s: string) => s.trim().toLowerCase();
+const normalize = (s?: string) => (s ?? "").trim().toLowerCase();
 
 export default function CategoryBreakdown() {
     const {

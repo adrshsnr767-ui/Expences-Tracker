@@ -16,15 +16,11 @@ const budgetFormSchema = z.object({
                 _id: z.string(),
                 amount: z
                     .string()
-                    .min(1, "Budget amount is required")
                     .refine(
                         (val) => !isNaN(Number(val)),
                         "Enter a valid number"
                     )
-                    .refine(
-                        (val) => Number(val) > 0,
-                        "Amount must be greater than 0"
-                    ),
+
             })
         )
         .min(1, "Add at least one category"),
@@ -51,7 +47,7 @@ export default function BudgetForm({ isOpen, onClose }: {
         name: "categories",
     });
 
-    
+
     useEffect(() => {
         if (!data?.data) return;
         const current = getValues("categories");
@@ -72,6 +68,7 @@ export default function BudgetForm({ isOpen, onClose }: {
                 )
             );
             onClose();
+            reset();
         } catch {
             form.setError("root", { message: "Some budgets failed to save" });
         }

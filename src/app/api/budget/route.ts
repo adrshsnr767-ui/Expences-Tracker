@@ -93,3 +93,31 @@ export async function POST(request: Request) {
         );
     }
 }
+
+
+
+export async function GET() {
+    try {
+        await dbConnect();
+
+        const session = await getServerSession(authOptions);
+        if (!session?.user?.id) {
+            return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
+        }
+
+        const now = new Date();
+        const budgets = await Budget.find({
+            user: session.user.id,
+            month: now.getMonth() + 1,
+            year: now.getFullYear(),
+        }).lean();
+
+        return NextResponse.json({ data: budgets }, { status: 200 });
+    } catch (error) {
+        console.error("Get budgets error:", error);
+        return NextResponse.json(
+            { message: "Something went wrong while fetching budgets" },
+            { status: 500 }
+        );
+    }
+}

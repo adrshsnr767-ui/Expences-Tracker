@@ -1,4 +1,4 @@
-import { apiSlice } from "./apiSlice"; 
+import { apiSlice } from "./apiSlice";
 export interface SaveBudgetRequest {
     categoryId: string;
     amount: string | number;
@@ -25,10 +25,13 @@ export const budgetApi = apiSlice.injectEndpoints({
                 url: "/budget",
                 method: "POST",
                 body,
-            }),
-            invalidatesTags: ["Budgets"],
+            }), invalidatesTags: ["Budgets"],
+        }),
+        getBudgets: builder.query<{ data: { category: string; amount: number }[] }, void>({
+            query: () => "/budget",   
+            providesTags: ["Budgets"],
         }),
     }),
 });
 
-export const { useSaveBudgetMutation } = budgetApi;
+export const { useSaveBudgetMutation, useGetBudgetsQuery } = budgetApi;
